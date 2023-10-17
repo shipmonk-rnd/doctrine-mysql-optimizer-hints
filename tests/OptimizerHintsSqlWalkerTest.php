@@ -50,20 +50,42 @@ class OptimizerHintsSqlWalkerTest extends TestCase
     public static function walksProvider(): iterable
     {
         $selectDql = sprintf('SELECT w FROM %s w', DummyEntity::class);
+        $selectDistinctDql = sprintf('SELECT DISTINCT w FROM %s w', DummyEntity::class);
 
         yield 'Max exec time' => [
             $selectDql,
             static function (Query $query): void {
                 $query->setHint(OptimizerHintsSqlWalker::class, [OptimizerHint::maxExecutionTime(1000)]);
             },
-            'SELECT /*+ MAX_EXECUTION_TIME(1000) */  d0_.id AS id_0 FROM dummy_entity d0_',
+            'SELECT /*+ MAX_EXECUTION_TIME(1000) */ d0_.id AS id_0 FROM dummy_entity d0_',
+        ];
+        yield 'Distinct' => [
+            $selectDistinctDql,
+            static function (Query $query): void {
+                $query->setHint(OptimizerHintsSqlWalker::class, ['']);
+            },
+            'SELECT /*+  */ DISTINCT d0_.id AS id_0 FROM dummy_entity d0_',
+        ];
+        yield 'Escaping $' => [
+            $selectDql,
+            static function (Query $query): void {
+                $query->setHint(OptimizerHintsSqlWalker::class, ['$0']);
+            },
+            'SELECT /*+ $0 */ d0_.id AS id_0 FROM dummy_entity d0_',
+        ];
+        yield 'Escaping \\' => [
+            $selectDql,
+            static function (Query $query): void {
+                $query->setHint(OptimizerHintsSqlWalker::class, ['\0']);
+            },
+            'SELECT /*+ \0 */ d0_.id AS id_0 FROM dummy_entity d0_',
         ];
         yield 'No range optimization' => [
             $selectDql,
             static function (Query $query): void {
                 $query->setHint(OptimizerHintsSqlWalker::class, ['NO_RANGE_OPTIMIZATION(my_table PRIMARY)']);
             },
-            'SELECT /*+ NO_RANGE_OPTIMIZATION(my_table PRIMARY) */  d0_.id AS id_0 FROM dummy_entity d0_',
+            'SELECT /*+ NO_RANGE_OPTIMIZATION(my_table PRIMARY) */ d0_.id AS id_0 FROM dummy_entity d0_',
         ];
         yield 'Invalid value' => [
             $selectDql,

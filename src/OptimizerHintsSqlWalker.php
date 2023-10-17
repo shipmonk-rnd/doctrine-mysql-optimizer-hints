@@ -6,6 +6,7 @@ use Doctrine\ORM\Query\AST\SelectClause;
 use Doctrine\ORM\Query\AST\SelectStatement;
 use Doctrine\ORM\Query\SqlWalker;
 use LogicException;
+use function addcslashes;
 use function get_class;
 use function gettype;
 use function implode;
@@ -49,8 +50,9 @@ class OptimizerHintsSqlWalker extends SqlWalker
             }
         }
 
-        $optimizerHintsSql = implode(' ', $optimizerHints);
-        $sqlWithOptimizerHints = preg_replace('~^SELECT (.*?)~', "SELECT /*+ $optimizerHintsSql */ \\1 ", $sql);
+        $optimizerHintsString = implode(' ', $optimizerHints);
+        $optimizerHintsSql = addcslashes($optimizerHintsString, '$\\');
+        $sqlWithOptimizerHints = preg_replace('~^SELECT ~', "SELECT /*+ $optimizerHintsSql */ ", $sql);
 
         if ($sqlWithOptimizerHints === null) {
             throw new LogicException('Regex replace failure: ' . preg_last_error_msg());
