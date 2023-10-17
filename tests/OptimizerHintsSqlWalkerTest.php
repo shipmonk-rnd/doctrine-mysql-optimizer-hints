@@ -5,14 +5,12 @@ namespace ShipMonk\Doctrine\MySql;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQL80Platform;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\Query;
 use LogicException;
 use PHPUnit\Framework\TestCase;
-use function class_exists;
 use function sprintf;
 
 class OptimizerHintsSqlWalkerTest extends TestCase
@@ -93,7 +91,7 @@ class OptimizerHintsSqlWalkerTest extends TestCase
             ->willReturn($eventManager);
 
         $connectionMock->method('getDatabasePlatform')
-            ->willReturn(class_exists(MySQL80Platform::class) ? new MySQL80Platform() : new MySqlPlatform());
+            ->willReturn(new MySQL80Platform());
 
         return EntityManager::create(
             $connectionMock,
