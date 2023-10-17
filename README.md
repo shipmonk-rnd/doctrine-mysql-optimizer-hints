@@ -20,14 +20,14 @@ $result = $em->createQueryBuilder()
     ->andWhere('u.id = 1')
     ->getQuery()
     ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, OptimizerHintsSqlWalker::class)
-    ->setHint(OptimizerHintsSqlWalker::class, [OptimizerHint::maxExecutionTime(10_000)])
+    ->setHint(OptimizerHintsSqlWalker::class, ['MAX_EXECUTION_TIME(1000)'])
     ->getResult();
 ```
 
 Which produces following SQL:
 
 ```mysql
-SELECT /*+ MAX_EXECUTION_TIME(10000) */ u0_.id AS id_0
+SELECT /*+ MAX_EXECUTION_TIME(1000) */ u0_.id AS id_0
 FROM user u0_
 WHERE u0_.id = 1
 ```
@@ -37,6 +37,7 @@ Typically, you have some default global settings you want to overwrite only temp
 Doing so by `SET max_execution_time = 10000;` is tricky as you should revert that to previous value just after the query ends.
 This results in complex code around it, optimizer hint does that for you for free.
 
+Be careful what you place as optimizer hint, you are basically writing SQL there, but MySQL produces only warnings when a typo is made there.
+
 ### Versions
 - 1.x requires PHP >= 7.2
-- 2.x requires PHP >= 8.1

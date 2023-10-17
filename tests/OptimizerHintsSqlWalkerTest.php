@@ -54,7 +54,7 @@ class OptimizerHintsSqlWalkerTest extends TestCase
 
         yield 'Max exec time' => [
             $selectDql,
-            [OptimizerHint::maxExecutionTime(1000)],
+            ['MAX_EXECUTION_TIME(1000)'],
             'SELECT /*+ MAX_EXECUTION_TIME(1000) */ d0_.id AS id_0 FROM dummy_entity d0_',
         ];
         yield 'Distinct' => [
