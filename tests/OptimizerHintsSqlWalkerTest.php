@@ -17,12 +17,12 @@ class OptimizerHintsSqlWalkerTest extends TestCase
 {
 
     /**
-     * @param callable(Query): void $configureQueryCallback
+     * @param mixed $hint
      * @dataProvider walksProvider
      */
     public function testWalker(
         string $dql,
-        callable $configureQueryCallback,
+        $hint,
         ?string $expectedSql,
         ?string $expectedError = null
     ): void
@@ -38,7 +38,7 @@ class OptimizerHintsSqlWalkerTest extends TestCase
         $query->setDQL($dql);
 
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, OptimizerHintsSqlWalker::class);
-        $configureQueryCallback($query);
+        $query->setHint(OptimizerHintsSqlWalker::class, $hint);
         $producedSql = $query->getSQL();
 
         self::assertSame($expectedSql, $producedSql);
@@ -54,44 +54,32 @@ class OptimizerHintsSqlWalkerTest extends TestCase
 
         yield 'Max exec time' => [
             $selectDql,
-            static function (Query $query): void {
-                $query->setHint(OptimizerHintsSqlWalker::class, [OptimizerHint::maxExecutionTime(1000)]);
-            },
+            [OptimizerHint::maxExecutionTime(1000)],
             'SELECT /*+ MAX_EXECUTION_TIME(1000) */ d0_.id AS id_0 FROM dummy_entity d0_',
         ];
         yield 'Distinct' => [
             $selectDistinctDql,
-            static function (Query $query): void {
-                $query->setHint(OptimizerHintsSqlWalker::class, ['']);
-            },
+            [''],
             'SELECT /*+  */ DISTINCT d0_.id AS id_0 FROM dummy_entity d0_',
         ];
         yield 'Escaping $' => [
             $selectDql,
-            static function (Query $query): void {
-                $query->setHint(OptimizerHintsSqlWalker::class, ['$0']);
-            },
+            ['$0'],
             'SELECT /*+ $0 */ d0_.id AS id_0 FROM dummy_entity d0_',
         ];
         yield 'Escaping \\' => [
             $selectDql,
-            static function (Query $query): void {
-                $query->setHint(OptimizerHintsSqlWalker::class, ['\0']);
-            },
+            ['\0'],
             'SELECT /*+ \0 */ d0_.id AS id_0 FROM dummy_entity d0_',
         ];
-        yield 'No range optimization' => [
+        yield 'Multiple hints' => [
             $selectDql,
-            static function (Query $query): void {
-                $query->setHint(OptimizerHintsSqlWalker::class, ['NO_RANGE_OPTIMIZATION(my_table PRIMARY)']);
-            },
-            'SELECT /*+ NO_RANGE_OPTIMIZATION(my_table PRIMARY) */ d0_.id AS id_0 FROM dummy_entity d0_',
+            ['MAX_EXECUTION_TIME(1000)', 'NO_RANGE_OPTIMIZATION(my_table PRIMARY)'],
+            'SELECT /*+ MAX_EXECUTION_TIME(1000) NO_RANGE_OPTIMIZATION(my_table PRIMARY) */ d0_.id AS id_0 FROM dummy_entity d0_',
         ];
         yield 'Invalid value' => [
             $selectDql,
-            static function (Query $query): void {
-                $query->setHint(OptimizerHintsSqlWalker::class, 'BNL(t1)');
-            },
+            'BNL(t1)',
             null,
             '~expecting array of strings, string given$~',
         ];
