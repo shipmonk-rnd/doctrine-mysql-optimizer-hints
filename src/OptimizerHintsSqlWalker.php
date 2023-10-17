@@ -14,8 +14,6 @@ use function is_object;
 use function is_string;
 use function preg_last_error_msg;
 use function preg_replace;
-use function strpos;
-use function strtolower;
 
 class OptimizerHintsSqlWalker extends SqlWalker
 {
@@ -27,14 +25,7 @@ class OptimizerHintsSqlWalker extends SqlWalker
     {
         $selfClass = static::class;
         $query = $this->getQuery();
-        $platform = $query->getEntityManager()->getConnection()->getDatabasePlatform();
-        $normalizedPlatformName = strtolower(get_class($platform)); // bypass renames in DBAL
-
         $sql = parent::walkSelectClause($selectClause);
-
-        if (strpos($normalizedPlatformName, 'mysql') === false) {
-            throw new LogicException("Only MySQL platform is supported, {$normalizedPlatformName} given");
-        }
 
         if (!$query->hasHint(self::class)) {
             throw new LogicException("{$selfClass} was used, but no limit in milliseconds was added. Use e.g. ->setHint({$selfClass}::class, 5_000)");
