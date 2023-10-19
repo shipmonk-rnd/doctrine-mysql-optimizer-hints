@@ -29,7 +29,7 @@ class OptimizerHintsSqlWalker extends SqlWalker
         $sql = parent::walkSelectClause($selectClause);
 
         if (!$query->hasHint(self::class)) {
-            throw new LogicException("{$selfClass} was used, but no limit in milliseconds was added. Use e.g. ->setHint({$selfClass}::class, 5_000)");
+            throw new LogicException("{$selfClass} was used, but no optimizer hint was added. Use e.g. ->setHint({$selfClass}::class, ['MAX_EXECUTION_TIME(1000)'])");
         }
 
         if (!$query->getAST() instanceof SelectStatement) {
