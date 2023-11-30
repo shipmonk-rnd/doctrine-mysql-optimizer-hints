@@ -2,10 +2,9 @@
 
 namespace ShipMonk\Doctrine\MySql;
 
-use Doctrine\ORM\Query\AST\SelectClause;
-use Doctrine\ORM\Query\AST\SelectStatement;
-use Doctrine\ORM\Query\SqlWalker;
 use LogicException;
+use ShipMonk\Doctrine\Walker\HintHandler;
+use ShipMonk\Doctrine\Walker\SqlNode;
 use function addcslashes;
 use function get_class;
 use function gettype;
@@ -16,27 +15,22 @@ use function is_string;
 use function preg_last_error_msg;
 use function preg_replace;
 
-class OptimizerHintsSqlWalker extends SqlWalker
+class OptimizerHintsHintHandler extends HintHandler
 {
 
     /**
-     * @param SelectClause $selectClause
+     * @return list<SqlNode::*>
      */
-    public function walkSelectClause($selectClause): string
+    public function getNodes(): array
+    {
+        return [SqlNode::SelectClause];
+    }
+
+    public function processNode(string $sqlNode, string $sql): string
     {
         $selfClass = static::class;
-        $query = $this->getQuery();
-        $sql = parent::walkSelectClause($selectClause);
 
-        if (!$query->hasHint(self::class)) {
-            throw new LogicException("{$selfClass} was used, but no optimizer hint was added. Use e.g. ->setHint({$selfClass}::class, ['MAX_EXECUTION_TIME(1000)'])");
-        }
-
-        if (!$query->getAST() instanceof SelectStatement) {
-            throw new LogicException("Only SELECT queries are currently supported by {$selfClass}");
-        }
-
-        $optimizerHints = $query->getHint(self::class);
+        $optimizerHints = $this->getHintValue();
 
         if (!is_array($optimizerHints)) {
             $type = is_object($optimizerHints) ? get_class($optimizerHints) : gettype($optimizerHints);
