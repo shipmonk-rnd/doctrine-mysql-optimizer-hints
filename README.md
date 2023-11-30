@@ -19,8 +19,8 @@ $result = $em->createQueryBuilder()
     ->from(User::class, 'u')
     ->andWhere('u.id = 1')
     ->getQuery()
-    ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, OptimizerHintsSqlWalker::class)
-    ->setHint(OptimizerHintsSqlWalker::class, ['MAX_EXECUTION_TIME(1000)'])
+    ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, HintDrivenSqlWalker::class)
+    ->setHint(OptimizerHintsHintHandler::class, ['MAX_EXECUTION_TIME(1000)'])
     ->getResult();
 ```
 
@@ -39,5 +39,18 @@ This results in complex code around it, optimizer hint does that for you for fre
 
 Be careful what you place as optimizer hint, you are basically writing SQL there, but MySQL produces only warnings when a typo is made there.
 
-### Versions
-- 1.x requires PHP >= 7.2
+### Combining with index hints:
+
+Since 2.0.0, you can combine this library with [shipmonk/doctrine-mysql-index-hint](https://github.com/shipmonk-rnd/doctrine-mysql-index-hints):
+
+```php
+$result = $em->createQueryBuilder()
+    ->select('u.id')
+    ->from(User::class, 'u')
+    ->andWhere('u.id = 1')
+    ->getQuery()
+    ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, HintDrivenSqlWalker::class)
+    ->setHint(OptimizerHintsHintHandler::class, ['MAX_EXECUTION_TIME(1000)'])
+    ->setHint(UseIndexHintHandler::class, [IndexHint::force(User::IDX_FOO, User::TABLE_NAME)])
+    ->getResult();
+```

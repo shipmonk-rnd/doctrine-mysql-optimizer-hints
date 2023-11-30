@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\Query;
 use LogicException;
 use PHPUnit\Framework\TestCase;
+use ShipMonk\Doctrine\Walker\HintDrivenSqlWalker;
 use function sprintf;
 
 class OptimizerHintsSqlWalkerTest extends TestCase
@@ -37,8 +38,8 @@ class OptimizerHintsSqlWalkerTest extends TestCase
         $query = new Query($entityManagerMock);
         $query->setDQL($dql);
 
-        $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, OptimizerHintsSqlWalker::class);
-        $query->setHint(OptimizerHintsSqlWalker::class, $hint);
+        $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, HintDrivenSqlWalker::class);
+        $query->setHint(OptimizerHintsHintHandler::class, $hint);
         $producedSql = $query->getSQL();
 
         self::assertSame($expectedSql, $producedSql);
