@@ -54,3 +54,6 @@ $result = $em->createQueryBuilder()
     ->setHint(UseIndexHintHandler::class, [IndexHint::force(User::IDX_FOO, User::TABLE_NAME)])
     ->getResult();
 ```
+
+### Supported PHP versions
+- PHP 7.2 - 8.3
