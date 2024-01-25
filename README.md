@@ -62,8 +62,8 @@ Simpliest usage is to force the table order to be exactly as you wrote it is usi
 #### Testing invisible index:
 
 When dealing with complex query optimization on production, you can only guess if the new index you thought up will help or not.
-Since MySQL 8.0, you can create [invisible index](https://dev.mysql.com/doc/refman/8.0/en/invisible-indexes.html) which are not used by default.
-But can test certain query while enabling usage of invisible indexes:
+Since MySQL 8.0, you can create [invisible index](https://dev.mysql.com/doc/refman/8.0/en/invisible-indexes.html) (those are maintained by the engine, but not used).
+But you can enable invisible indexes for the query you want to test:
 
 ```php
 ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, HintDrivenSqlWalker::class)
