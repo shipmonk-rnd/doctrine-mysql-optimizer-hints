@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d22fea9f01c7d3643088f4e22b2127c",
+    "content-hash": "0b47650737183bf689faee974aead16b",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -3637,16 +3637,16 @@
         },
         {
             "name": "shipmonk/composer-dependency-analyser",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/shipmonk-rnd/composer-dependency-analyser.git",
-                "reference": "25d195b1f3a3029ad94fc1f79503b87c9455d7b5"
+                "reference": "58da2ff17fcb82d363d906e9db668b5ddeb82222"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shipmonk-rnd/composer-dependency-analyser/zipball/25d195b1f3a3029ad94fc1f79503b87c9455d7b5",
-                "reference": "25d195b1f3a3029ad94fc1f79503b87c9455d7b5",
+                "url": "https://api.github.com/repos/shipmonk-rnd/composer-dependency-analyser/zipball/58da2ff17fcb82d363d906e9db668b5ddeb82222",
+                "reference": "58da2ff17fcb82d363d906e9db668b5ddeb82222",
                 "shasum": ""
             },
             "require": {
@@ -3663,7 +3663,6 @@
                 "shipmonk/name-collision-detector": "^2.0.0",
                 "slevomat/coding-standard": "^8.0.1"
             },
-            "default-branch": true,
             "bin": [
                 "bin/composer-dependency-analyser"
             ],
@@ -3694,9 +3693,9 @@
             ],
             "support": {
                 "issues": "https://github.com/shipmonk-rnd/composer-dependency-analyser/issues",
-                "source": "https://github.com/shipmonk-rnd/composer-dependency-analyser/tree/master"
+                "source": "https://github.com/shipmonk-rnd/composer-dependency-analyser/tree/1.0.0"
             },
-            "time": "2024-01-12T11:13:11+00:00"
+            "time": "2024-01-17T13:41:26+00:00"
         },
         {
             "name": "slevomat/coding-standard",
@@ -3897,8 +3896,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "shipmonk/doctrine-hint-driven-sql-walker": 20,
-        "shipmonk/composer-dependency-analyser": 20
+        "shipmonk/doctrine-hint-driven-sql-walker": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
@@ -3906,8 +3904,5 @@
         "php": "^7.2 || ^8.0"
     },
     "platform-dev": [],
-    "platform-overrides": {
-        "php": "7.2"
-    },
     "plugin-api-version": "2.6.0"
 }
