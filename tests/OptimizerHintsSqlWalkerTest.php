@@ -45,7 +45,7 @@ class OptimizerHintsSqlWalkerTest extends TestCase
     }
 
     /**
-     * @return iterable|mixed[][]
+     * @return iterable<string, array{0: string, 1: mixed, 2: ?string, 3?: string}>
      */
     public static function walksProvider(): iterable
     {
