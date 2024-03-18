@@ -4,8 +4,10 @@ includes:
     - ./vendor/phpstan/phpstan-strict-rules/rules.neon
     - ./vendor/phpstan/phpstan-phpunit/extension.neon
     - ./vendor/phpstan/phpstan-phpunit/rules.neon
+    - ./vendor/shipmonk/phpstan-rules/rules.neon
 
 parameters:
+    phpVersion: 80100
     paths:
         - src
         - tests
