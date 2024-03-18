@@ -7,9 +7,11 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\Query;
 use LogicException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ShipMonk\Doctrine\Walker\HintDrivenSqlWalker;
 use function sprintf;
@@ -17,15 +19,12 @@ use function sprintf;
 class OptimizerHintsSqlWalkerTest extends TestCase
 {
 
-    /**
-     * @param mixed $hint
-     * @dataProvider walksProvider
-     */
+    #[DataProvider('walksProvider')]
     public function testWalker(
         string $dql,
-        $hint,
+        mixed $hint,
         ?string $expectedSql,
-        ?string $expectedError = null
+        ?string $expectedError = null,
     ): void
     {
         if ($expectedError !== null) {
@@ -93,7 +92,7 @@ class OptimizerHintsSqlWalkerTest extends TestCase
         $config->setProxyDir('/tmp/doctrine');
         $config->setAutoGenerateProxyClasses(false);
         $config->setSecondLevelCacheEnabled(false);
-        $config->setMetadataDriverImpl($config->newDefaultAnnotationDriver([], false));
+        $config->setMetadataDriverImpl(new AttributeDriver([__DIR__]));
         $config->setNamingStrategy(new UnderscoreNamingStrategy());
 
         $eventManager = $this->createMock(EventManager::class);
@@ -104,10 +103,10 @@ class OptimizerHintsSqlWalkerTest extends TestCase
         $connectionMock->method('getDatabasePlatform')
             ->willReturn(new MySQL80Platform());
 
-        return EntityManager::create(
+        return new EntityManager(
             $connectionMock,
             $config,
-            $eventManager
+            $eventManager,
         );
     }
 

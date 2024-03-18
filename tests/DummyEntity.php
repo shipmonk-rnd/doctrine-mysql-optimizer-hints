@@ -2,20 +2,17 @@
 
 namespace ShipMonk\Doctrine\MySql;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Id;
 
-/**
- * @ORM\Entity
- */
+#[Entity]
 class DummyEntity
 {
 
-    /**
-     * @var int
-     * @ORM\Id
-     * @ORM\Column(nullable=false)
-     */
-    private $id;
+    #[Id]
+    #[Column(type: 'string', nullable: false)]
+    private int $id;
 
     public function __construct(int $id)
     {
