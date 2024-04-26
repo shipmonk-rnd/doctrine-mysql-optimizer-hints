@@ -70,6 +70,16 @@ But you can enable invisible indexes for the query you want to test:
 ->setHint(OptimizerHintsHintHandler::class, ["SET_VAR(optimizer_switch = 'use_invisible_indexes=on')"])
 ```
 
+#### Enlarging group_concat limit for a single query
+
+Default limit of [group_concat_max_len](https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_group_concat_max_len) is 1024, but you can make it bigger:
+
+```php
+->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, HintDrivenSqlWalker::class)
+->setHint(OptimizerHintsHintHandler::class, ["SET_VAR(group_concat_max_len = 4294967295)"])
+```
+
+
 
 ### Combining with index hints:
 
