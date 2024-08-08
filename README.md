@@ -97,9 +97,3 @@ $result = $em->createQueryBuilder()
     ->getResult();
 ```
 
-### Supported PHP versions
-| Version | PHP Requirement | doctrine/orm |
-|---------|-----------------|--------------|
-| v1      | >= PHP 7.2      | 2.x          |
-| v2      | >= PHP 7.2      | 2.x          |
-| v3      | >= PHP 8.1      | 3.x          |
