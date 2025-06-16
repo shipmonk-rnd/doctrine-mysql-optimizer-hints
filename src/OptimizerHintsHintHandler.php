@@ -25,7 +25,10 @@ class OptimizerHintsHintHandler extends HintHandler
         return [SqlNode::SelectClause];
     }
 
-    public function processNode(SqlNode $sqlNode, string $sql): string
+    public function processNode(
+        SqlNode $sqlNode,
+        string $sql,
+    ): string
     {
         $selfClass = static::class;
 
